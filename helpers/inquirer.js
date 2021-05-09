@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-require('colors');
+const colors = require('colors');
 
 const inquirerMenu = async() => {
 
@@ -82,8 +82,29 @@ const leerInput = async (message) =>{
     return desc;
 }
 
+const listadoTareaBorrar = async(tareas = []) => {
+    const choices = tareas.map((tarea, indice) => {
+        return{
+            value: tarea.id,
+            name: `${colors.green(indice + 1)}. ${tarea.desc}`
+        }
+    });
+
+    const preguntas = [
+        {
+            type: 'list',
+            name: 'id',
+            message: 'Cual tarea desea borrar?',
+            choices
+        }];
+    
+    const {id} = await inquirer.prompt(preguntas);
+    return id;
+}
+
 module.exports = {
     inquirerMenu, 
     pause,
-    leerInput
+    leerInput,
+    listadoTareaBorrar
 }

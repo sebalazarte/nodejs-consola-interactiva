@@ -7,7 +7,8 @@ const {
 const { 
     inquirerMenu, 
     pause, 
-    leerInput 
+    leerInput,
+    listadoTareaBorrar 
 } = require('./helpers/inquirer');
 
 const Tareas = require('./models/tareas');
@@ -20,9 +21,8 @@ const main = async() =>{
     const tareas = new Tareas();
     const tareasDB = leerDB();
     if(tareasDB){
-        
+        tareas.cargarTareasFromArray(tareasDB);
     }
-
 
     do {
         opt = await inquirerMenu();
@@ -32,16 +32,20 @@ const main = async() =>{
                 const desc = await leerInput('Descripcion: ');
                 tareas.crearTarea(desc);
                 break;
-            case '2':
-                console.log(tareas._listado);
+            case '2': //listar todas las tareas
+                tareas.listadoCompleto();
                 break;
-            case '3':
+            case '3'://listar tareas completadas
+                tareas.listarPorEstado(true);
                 break;
-            case '4':
+            case '4'://listar tareas pendientes
+                tareas.listarPorEstado(false);;
                 break;
             case '5':
                 break;
-            case '6':
+            case '6'://borrar tarea
+                const id = await listadoTareaBorrar(tareas.listadoArr);
+                console.log({id});
                 break;
         
             default:
